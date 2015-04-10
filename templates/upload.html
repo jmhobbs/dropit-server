@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block title %}{{ upload.filename }}{% endblock %}
+
+{% block content %}
+  {% if not upload.is_uploaded %}
+<div class="row">
+  <h2>{{ upload.filename }}</h2>
+  <h4>Uploading...</h4>
+</div>
+  {% else %}
+<div class="row">
+  <h2>{{ upload.filename }}</h2>
+  <h4>{{ upload.created|format_timestamp }} by {{ upload.username }}</h4>
+</div>
+  {% if upload.is_image %}
+<div class="row" style="margin: 20px 0; text-align: center;">
+  <img src="{{ url }}" alt="{{ upload.filename }}" />
+</div>
+  {% endif %}
+<div class="row">
+  <a href="{{ url }}" class="btn btn-primary">Download</a>
+</div>
+  {% endif %}
+</div>
+{% endblock %}

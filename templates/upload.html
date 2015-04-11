@@ -17,6 +17,13 @@
 <div class="row" style="margin: 20px 0; text-align: center;">
   <img src="{{ url }}" alt="{{ upload.filename }}" />
 </div>
+  {% elif upload.is_video %}
+<div class="row" style="margin: 20px 0; text-align: center;">
+  <video controls>
+    <source src="{{ url }}" type="{{ upload.content_type }}">
+    Your browser does not support the video tag.
+  </video>
+</div>
   {% endif %}
 <div class="row">
   <a href="{{ url }}" class="btn btn-primary">Download</a>

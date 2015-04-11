@@ -122,5 +122,9 @@ class Upload(object):
     def is_image(self):
         return self.content_type[:6] == 'image/'
 
+    @property
+    def is_video(self):
+        return self.content_type[:6] == 'video/'
+
     def get_file_url(self, url_base):
         return url_base + self.storage_path

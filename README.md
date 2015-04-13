@@ -34,3 +34,14 @@ If you can't figure out what the first three are, you should go do some reading 
 `UPLOAD_URL_BASE` is the root of where direct uploads go.  This is so if you CNAME your S3 bucket you can specify that.
 In general this should be something like `http://mybucket.s3.amazonaws.com/` but could be anything as long as it's all
 configured correctly.
+
+# Design
+
+Data is stored in redis, as hashes to represent objects, and lists/strings for indexes.
+
+## Uploading A File
+
+  1. Authenticated client hits /upload/sign
+  2. Server takes content type, size, etc and generates an AWS policy for the upload, signs it and returns to client
+  3. Client uploads directly to S3 using this policy
+  4. Client notifies the server of the upload success (or failure)

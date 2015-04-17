@@ -4,6 +4,7 @@ import base64
 import time
 import datetime
 import os
+import urllib
 from .exceptions import NotFoundException, InvalidObjectException
 
 
@@ -127,4 +128,4 @@ class Upload(object):
         return self.content_type[:6] == 'video/'
 
     def get_file_url(self, url_base):
-        return url_base + self.storage_path
+        return u"%s%s/%s/%s" % (url_base, self.username, self.token, urllib.quote_plus(self.filename))

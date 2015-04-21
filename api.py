@@ -9,40 +9,41 @@ import models
 import s3
 from auth import requires_auth
 
-upload = Blueprint('upload', __name__)
+api = Blueprint('api', __name__)
 
 
-@upload.errorhandler(400)
+@api.errorhandler(400)
 def http_400(e):
     return make_response("Bad Request", 400)
 
 
-@upload.errorhandler(401)
+@api.errorhandler(401)
 def http_401(e):
     response = make_response("Not Authorized", 401)
     response.headers['WWW-Authenticate'] = 'Basic realm="Authentication Required"'
     return response
 
 
-@upload.errorhandler(403)
+@api.errorhandler(403)
 def http_403(e):
     return make_response("Forbidden", 403)
 
 
-@upload.errorhandler(models.NotFoundException)
+@api.errorhandler(models.NotFoundException)
 def models_404(e):
     response = jsonify(error='Not Found')
     response.status_code = 404
     return response
 
-@upload.errorhandler(models.InvalidObjectException)
+
+@api.errorhandler(models.InvalidObjectException)
 def validation_400(e):
     response = jsonify(error='Bad Request', errors=e.errors)
     response.status_code = 400
     return response
 
 
-@upload.route("/sign", methods=('POST',))
+@api.route("/upload/sign", methods=('POST',))
 @requires_auth
 def sign_upload():
     upload = models.Upload.create(
@@ -70,7 +71,7 @@ def sign_upload():
     )
 
 
-@upload.route("/complete", methods=('POST',))
+@api.route("/upload/complete", methods=('POST',))
 @requires_auth
 def complete_upload():
     upload = models.Upload.load(extensions.redis, request.form['token'])
@@ -89,7 +90,7 @@ def complete_upload():
     return response
 
 
-@upload.route("/delete", methods=('POST',))
+@api.route("/upload/delete", methods=('POST',))
 @requires_auth
 def delete_upload():
     upload = models.Upload.load(extensions.redis, request.form['token'])
@@ -107,3 +108,9 @@ def delete_upload():
     response = jsonify(error=False)
     response.status_code = 204
     return response
+
+
+@api.route("/user/verify", methods=('GET',))
+@requires_auth
+def user_verify():
+    return jsonify(error=False)
